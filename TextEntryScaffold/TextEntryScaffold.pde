@@ -1,6 +1,8 @@
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
+import garciadelcastillo.dashedlines.*;
+
 
 String[] phrases; //contains all of the phrases
 int totalTrialNum = 2; //the total number of phrases to be tested - set this low for testing. Might be ~10 for the real bakeoff!
@@ -20,6 +22,11 @@ PImage watch;
 
 //Variables for my silly implementation. You can delete this:
 char currentLetter = 'a';
+String[] allLetters = { "etaoi", "nshrd", "lcumw", "fgypb", "vkjxqz"};
+
+
+// Declare the main DashedLines object
+DashedLines dash;
 
 //You can modify anything in here. This is just a basic implementation.
 void setup()
@@ -33,6 +40,11 @@ void setup()
   size(800, 800); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
   textFont(createFont("Arial", 24)); //set the font to arial 24. Creating fonts is expensive, so make difference sizes once in setup, not draw
   noStroke(); //my code doesn't use any strokes
+  // Initialize it, passing a reference to the current PApplet
+  dash = new DashedLines(this);
+
+  // Set the dash-gap pattern in pixels
+  dash.pattern(10, 5);
 }
 
 //You can modify anything in here. This is just a basic implementation.
@@ -40,8 +52,28 @@ void draw()
 {
   background(255); //clear background
   drawWatch(); //draw watch background
+  
   fill(100);
-  rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea); //input area should be 1" by 1"
+  
+  //input area should be 1" by 1"
+  rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea); 
+    
+  // draw dash lines to separate the watch screen into 6 areas 
+  //width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/2
+
+  //fill(40);
+  stroke(255, 255, 255);//make the line white
+  int cx = width / 2;
+  int cy = height / 2;
+  // h1
+  line(cx - sizeOfInputArea/2,  cy - sizeOfInputArea/6, cx + sizeOfInputArea/2, cy - sizeOfInputArea/6);
+  // h2
+  line(cx - sizeOfInputArea/2,  cy + sizeOfInputArea/6, cx + sizeOfInputArea/2, cy + sizeOfInputArea/6);
+  // v1
+  line(cx,  cy - sizeOfInputArea/2, cx, cy + sizeOfInputArea/2);
+
+
+  
 
   if (finishTime!=0)
   {
@@ -88,6 +120,41 @@ void draw()
     fill(200);
     text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
   }
+}
+
+// getQuadrant takes in raw mouseX and mouseY, and return a quadrant if it is inside the watch
+int getQuadrant() {
+  float cx = width / 2;
+  float cy = height / 2;
+  float S = sizeOfInputArea;
+  // This can be calculated with two lines since we have the (x,y) positino... 
+  // but I am concerned that float division might be error prone
+  // this is also an excuse to not do the math
+  if (didMouseClick(cx-S/2, cy-S/2, S / 2, S/ 3)) {
+    System.out.println("clicked quadrant 0");
+    return 0; // "etaoi" quadrant
+  }
+  else if (didMouseClick(cx, cy-S/2, S / 2, S/ 3)) {
+    System.out.println("clicked quadrant 1");
+    return 1; // "NSHRD" quadrant
+  }
+  else if (didMouseClick(cx-S/2, cy-S/6, S / 2, S/ 3)) {
+    System.out.println("clicked quadrant 2");
+    return 2; // "lcumw" quadrant
+  }
+  else if (didMouseClick(cx, cy-S/6, S / 2, S/ 3)) {
+    System.out.println("clicked quadrant 3");
+    return 3; // "fgypb" quadrant
+  }
+  else if (didMouseClick(cx-S/2, cy+S/6, S / 2, S/ 3)) {
+    System.out.println("clicked quadrant 4");
+    return 4; // "vkjxqz" quadrant
+  }
+  else if (didMouseClick(cx, cy+S/6, S / 2, S/ 3)) {
+    System.out.println("clicked quadrant 5");
+    return 5; // space bar quadrant
+  }
+  return -1; // outside
 }
 
 //my terrible implementation you can entirely replace
