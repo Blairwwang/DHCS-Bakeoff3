@@ -25,7 +25,7 @@ PImage watch;
 char currentLetter = 'a';
 //List<List<String>> allLetters = new ArrayList<List<String>>();
 String[] allLetters =  {"etaoi", "nshrd", "lcumw", "fgypb", "vkjxqz"};
-boolean selecting = false;
+boolean phaseOne = false;
 int currentQuadrant = -1;
 // Declare the main DashedLines object
 DashedLines dash;
@@ -33,12 +33,6 @@ DashedLines dash;
 //You can modify anything in here. This is just a basic implementation.
 void setup()
 {
-  //allLetters.add(Arrays.asList("e", "t", "a", "o","i"));
-  //allLetters.add(Arrays.asList("n", "s", "h", "r","d"));
-  //allLetters.add(Arrays.asList("l", "c", "u", "m","w"));
-  //allLetters.add(Arrays.asList("f", "g", "y", "p","b"));
-  //allLetters.add(Arrays.asList("v", "k", "j", "x","q", "z"));
-
   watch = loadImage("watchhand3smaller.png");
   phrases = loadStrings("phrases2.txt"); //load the phrase set into memory
   Collections.shuffle(Arrays.asList(phrases), new Random()); //randomize the order of the phrases with no seed
@@ -71,14 +65,47 @@ void draw()
 
   //fill(40);
   stroke(255, 255, 255);//make the line white
-  int cx = width / 2;
-  int cy = height / 2;
+  float cx = width / 2;
+  float cy = height / 2;
+  float offsetX = sizeOfInputArea/4;
+  float offsetY = sizeOfInputArea/6;
   // h1
   line(cx - sizeOfInputArea/2,  cy - sizeOfInputArea/6, cx + sizeOfInputArea/2, cy - sizeOfInputArea/6);
   // h2
   line(cx - sizeOfInputArea/2,  cy + sizeOfInputArea/6, cx + sizeOfInputArea/2, cy + sizeOfInputArea/6);
   // v1
   line(cx,  cy - sizeOfInputArea/2, cx, cy + sizeOfInputArea/2);
+  
+  // draw text
+  fill(255);
+  textAlign(CENTER);
+  // ok fine I'll do the math
+  if (!phaseOne) {
+    for (int i = 0; i < 6; i++) {
+      int xc = i % 2;
+      int yc = (i-xc) / 2;
+      if (i == 5) {
+        text("-", cx - sizeOfInputArea/2 + offsetX + sizeOfInputArea/2 * xc,  
+        cy - sizeOfInputArea/2 + offsetY + sizeOfInputArea/3 * yc);
+      } else {
+        text(allLetters[i], cx - sizeOfInputArea/2 + offsetX + sizeOfInputArea/2 * xc,  
+        cy - sizeOfInputArea/2 + offsetY + sizeOfInputArea/3 * yc);
+      }   
+    }  
+  } else {
+    // draw out each letters
+    for (int i = 0; i < 6; i++) {
+      int xc = i % 2;
+      int yc = (i-xc) / 2;
+      if (i == 5 && currentQuadrant != 4) {
+        text("", cx - sizeOfInputArea/2 + offsetX + sizeOfInputArea/2 * xc,  
+        cy - sizeOfInputArea/2 + offsetY + sizeOfInputArea/3 * yc);
+      } else {
+        text(allLetters[currentQuadrant].charAt(i), cx - sizeOfInputArea/2 + offsetX + sizeOfInputArea/2 * xc,  
+        cy - sizeOfInputArea/2 + offsetY + sizeOfInputArea/3 * yc);
+      }   
+    } 
+  }
 
 
   
@@ -139,27 +166,21 @@ int getQuadrant() {
   // but I am concerned that float division might be error prone
   // this is also an excuse to not do the math
   if (didMouseClick(cx-S/2, cy-S/2, S / 2, S/ 3)) {
-    System.out.println("clicked quadrant 0");
     return 0; // "etaoi" quadrant
   }
   else if (didMouseClick(cx, cy-S/2, S / 2, S/ 3)) {
-    System.out.println("clicked quadrant 1");
     return 1; // "NSHRD" quadrant
   }
   else if (didMouseClick(cx-S/2, cy-S/6, S / 2, S/ 3)) {
-    System.out.println("clicked quadrant 2");
     return 2; // "lcumw" quadrant
   }
   else if (didMouseClick(cx, cy-S/6, S / 2, S/ 3)) {
-    System.out.println("clicked quadrant 3");
     return 3; // "fgypb" quadrant
   }
   else if (didMouseClick(cx-S/2, cy+S/6, S / 2, S/ 3)) {
-    System.out.println("clicked quadrant 4");
     return 4; // "vkjxqz" quadrant
   }
   else if (didMouseClick(cx, cy+S/6, S / 2, S/ 3)) {
-    System.out.println("clicked quadrant 5");
     return 5; // space bar quadrant
   }
   return -1; // outside
@@ -177,16 +198,21 @@ void mousePressed()
   int quadrant = getQuadrant();
   // clicked outside, just ignore
   if (quadrant == -1) {
+    //You are allowed to have a next button outside the 1" area
+    if (didMouseClick(600, 600, 200, 200)) //check if click is in next button
+    {
+      nextTrial(); //if so, advance to next trial
+    }
     return;
   }
   // if we are on screen 1
-  if (!selecting) {
+  if (!phaseOne) {
     if (quadrant == 5) { // clicked space, simply proceed
       currentTyped+=" ";
       return;
     }
     currentQuadrant = quadrant;
-    selecting = true;
+    phaseOne = true;
     return;
   } else {
     // catch the edge case where we click the 5th quadrant but we are at the frist four cases
@@ -194,14 +220,10 @@ void mousePressed()
       return;
     }
     currentTyped+= allLetters[currentQuadrant].charAt(quadrant);
-    selecting = false;
+    phaseOne = false;
   }
 
-  //You are allowed to have a next button outside the 1" area
-  if (didMouseClick(600, 600, 200, 200)) //check if click is in next button
-  {
-    nextTrial(); //if so, advance to next trial
-  }
+
 }
 
 
