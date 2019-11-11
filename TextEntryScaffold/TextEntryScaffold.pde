@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.List;
 import java.util.Collections;
 import java.util.Random;
 import garciadelcastillo.dashedlines.*;
@@ -22,15 +23,22 @@ PImage watch;
 
 //Variables for my silly implementation. You can delete this:
 char currentLetter = 'a';
-String[] allLetters = { "etaoi", "nshrd", "lcumw", "fgypb", "vkjxqz"};
-
-
+//List<List<String>> allLetters = new ArrayList<List<String>>();
+String[] allLetters =  {"etaoi", "nshrd", "lcumw", "fgypb", "vkjxqz"};
+boolean selecting = false;
+int currentQuadrant = -1;
 // Declare the main DashedLines object
 DashedLines dash;
 
 //You can modify anything in here. This is just a basic implementation.
 void setup()
 {
+  //allLetters.add(Arrays.asList("e", "t", "a", "o","i"));
+  //allLetters.add(Arrays.asList("n", "s", "h", "r","d"));
+  //allLetters.add(Arrays.asList("l", "c", "u", "m","w"));
+  //allLetters.add(Arrays.asList("f", "g", "y", "p","b"));
+  //allLetters.add(Arrays.asList("v", "k", "j", "x","q", "z"));
+
   watch = loadImage("watchhand3smaller.png");
   phrases = loadStrings("phrases2.txt"); //load the phrase set into memory
   Collections.shuffle(Arrays.asList(phrases), new Random()); //randomize the order of the phrases with no seed
@@ -111,14 +119,14 @@ void draw()
     fill(255);
     text("NEXT > ", 650, 650); //draw next label
 
-    //my draw code
-    fill(255, 0, 0); //red button
-    rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
-    fill(0, 255, 0); //green button
-    rect(width/2-sizeOfInputArea/2+sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw right green button
-    textAlign(CENTER);
-    fill(200);
-    text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
+    ////my draw code
+    //fill(255, 0, 0); //red button
+    //rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
+    //fill(0, 255, 0); //green button
+    //rect(width/2-sizeOfInputArea/2+sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw right green button
+    //textAlign(CENTER);
+    //fill(200);
+    //text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
   }
 }
 
@@ -166,28 +174,27 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 //my terrible implementation you can entirely replace
 void mousePressed()
 {
-  if (didMouseClick(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in left button
-  {
-    currentLetter --;
-    if (currentLetter<'_') //wrap around to z
-      currentLetter = 'z';
+  int quadrant = getQuadrant();
+  // clicked outside, just ignore
+  if (quadrant == -1) {
+    return;
   }
-
-  if (didMouseClick(width/2-sizeOfInputArea/2+sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in right button
-  {
-    currentLetter ++;
-    if (currentLetter>'z') //wrap back to space (aka underscore)
-      currentLetter = '_';
-  }
-
-  if (didMouseClick(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/2)) //check if click occured in letter area
-  {
-    if (currentLetter=='_') //if underscore, consider that a space bar
+  // if we are on screen 1
+  if (!selecting) {
+    if (quadrant == 5) { // clicked space, simply proceed
       currentTyped+=" ";
-    else if (currentLetter=='`' & currentTyped.length()>0) //if `, treat that as a delete command
-      currentTyped = currentTyped.substring(0, currentTyped.length()-1);
-    else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
-      currentTyped+=currentLetter;
+      return;
+    }
+    currentQuadrant = quadrant;
+    selecting = true;
+    return;
+  } else {
+    // catch the edge case where we click the 5th quadrant but we are at the frist four cases
+    if (currentQuadrant <= 4 && quadrant == 5) {
+      return;
+    }
+    currentTyped+= allLetters[currentQuadrant].charAt(quadrant);
+    selecting = false;
   }
 
   //You are allowed to have a next button outside the 1" area
