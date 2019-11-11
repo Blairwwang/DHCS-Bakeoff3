@@ -36,7 +36,6 @@ void setup()
   watch = loadImage("watchhand3smaller.png");
   phrases = loadStrings("phrases2.txt"); //load the phrase set into memory
   Collections.shuffle(Arrays.asList(phrases), new Random()); //randomize the order of the phrases with no seed
-  //Collections.shuffle(Arrays.asList(phrases), new Random(100)); //randomize the order of the phrases with seed 100; same order every time, useful for testing
  
   orientation(LANDSCAPE); //can also be PORTRAIT - sets orientation on android device
   size(800, 800); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
@@ -107,9 +106,6 @@ void draw()
     } 
   }
 
-
-  
-
   if (finishTime!=0)
   {
     fill(128);
@@ -145,15 +141,6 @@ void draw()
     rect(600, 600, 200, 200); //draw next button
     fill(255);
     text("NEXT > ", 650, 650); //draw next label
-
-    ////my draw code
-    //fill(255, 0, 0); //red button
-    //rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
-    //fill(0, 255, 0); //green button
-    //rect(width/2-sizeOfInputArea/2+sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw right green button
-    //textAlign(CENTER);
-    //fill(200);
-    //text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
   }
 }
 
