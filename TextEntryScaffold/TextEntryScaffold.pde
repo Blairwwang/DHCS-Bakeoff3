@@ -13,11 +13,11 @@ float lettersExpectedTotal = 0; //a running total of the number of letters expec
 float errorsTotal = 0; //a running total of the number of errors (when hitting next)
 String currentPhrase = ""; //the current target phrase
 String currentTyped = ""; //what the user has typed so far
-final int DPIofYourDeviceScreen = 200; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
+final int DPIofYourDeviceScreen = 240; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
 //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
 final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 int minKeyWidth = (int)sizeOfInputArea / 10;
-int keyHeight = minKeyWidth * 8 / 5;
+int keyHeight = minKeyWidth * 16 / 5;
 PImage watch;
 
 String[] firstRowKeys = new String[] {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p"};
@@ -44,9 +44,9 @@ void setup()
   Collections.shuffle(Arrays.asList(phrases), new Random()); //randomize the order of the phrases with no seed
   //Collections.shuffle(Arrays.asList(phrases), new Random(100)); //randomize the order of the phrases with seed 100; same order every time, useful for testing
  
-  orientation(LANDSCAPE); //can also be PORTRAIT - sets orientation on android device
-  size(800, 800); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
-  textFont(createFont("Arial", 24)); //set the font to arial 24. Creating fonts is expensive, so make difference sizes once in setup, not draw
+  orientation(PORTRAIT); //can also be PORTRAIT - sets orientation on android device
+  size(480, 854); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
+  textFont(createFont("Arial", 20)); //set the font to arial 24. Creating fonts is expensive, so make difference sizes once in setup, not draw
   noStroke(); //my code doesn't use any strokes
 }
 
@@ -92,9 +92,9 @@ void draw()
 
     //draw very basic next button
     fill(255, 0, 0);
-    rect(600, 600, 200, 200); //draw next button
+    rect(width/2, height/2 + 150, 200, 200); //draw next button
     fill(255);
-    text("NEXT > ", 650, 650); //draw next label
+    text("NEXT > ", width/2, height/2 + 150); //draw next label
 
     //my draw code
     //fill(255, 0, 0); //red button
@@ -126,7 +126,7 @@ void mousePressed()
   float secondRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 3 - rowMargin * 2;
   float firstRowXOffset = (sizeOfInputArea - firstRowKeys.length * minKeyWidth) / 2;
   float firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
-  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3;
+  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3 - 50;
   print(firstRowKeyY - height/2+sizeOfInputArea/2);
   //click on first row
   if (didMouseClick(firstRowKeyStartX, firstRowKeyY, firstRowKeys.length * minKeyWidth, keyHeight)) {
@@ -170,7 +170,7 @@ void mousePressed()
   //}
 
   //You are allowed to have a next button outside the 1" area
-  if (didMouseClick(600, 600, 200, 200)) //check if click is in next button
+  if (didMouseClick(width/2, height/2 + 150, 200, 200)) //check if click is in next button
   {
     nextTrial(); //if so, advance to next trial
   }
@@ -293,7 +293,7 @@ void drawKeyboard()
   int numOfFirstRowKeys = firstRowKeys.length;
   float firstRowXOffset = (sizeOfInputArea - numOfFirstRowKeys * minKeyWidth) / 2;
   float firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
-  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3;
+  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3 - 50;
   for (int i = 0; i < numOfFirstRowKeys; i++) {
     float firstRowKeyX = firstRowKeyStartX + i * minKeyWidth;
     fill(230);
