@@ -17,7 +17,7 @@ final int DPIofYourDeviceScreen = 240; //you will need to look up the DPI or PPI
 //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
 final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 int minKeyWidth = (int)sizeOfInputArea / 10;
-int keyHeight = minKeyWidth * 16 / 5;
+int keyHeight = minKeyWidth * 12 / 5;
 PImage watch;
 
 String[] firstRowKeys = new String[] {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p"};
@@ -92,10 +92,10 @@ void draw()
 
     //draw very basic next button
     fill(255, 0, 0);
-    rect(width/2, height/2 + 150, 200, 200); //draw next button
+    rect(width/2 - 100, height/2 + 150, 200, 200); //draw next button
     fill(255);
-    text("NEXT > ", width/2, height/2 + 150); //draw next label
-
+    textAlign(CENTER);
+    text("NEXT > ", width/2, height/2 + 250); //draw next label
     //my draw code
     //fill(255, 0, 0); //red button
     //rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
@@ -126,7 +126,7 @@ void mousePressed()
   float secondRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 3 - rowMargin * 2;
   float firstRowXOffset = (sizeOfInputArea - firstRowKeys.length * minKeyWidth) / 2;
   float firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
-  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3 - 50;
+  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3;
   print(firstRowKeyY - height/2+sizeOfInputArea/2);
   //click on first row
   if (didMouseClick(firstRowKeyStartX, firstRowKeyY, firstRowKeys.length * minKeyWidth, keyHeight)) {
@@ -168,9 +168,9 @@ void mousePressed()
   //  else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
   //    currentTyped+=currentLetter;
   //}
-
+  //rect(width/2 - 100, height/2 + 150, 200, 200); //draw next button
   //You are allowed to have a next button outside the 1" area
-  if (didMouseClick(width/2, height/2 + 150, 200, 200)) //check if click is in next button
+  if (didMouseClick(width/2 - 100, height/2 + 150, 200, 200)) //check if click is in next button
   {
     nextTrial(); //if so, advance to next trial
   }
@@ -293,7 +293,7 @@ void drawKeyboard()
   int numOfFirstRowKeys = firstRowKeys.length;
   float firstRowXOffset = (sizeOfInputArea - numOfFirstRowKeys * minKeyWidth) / 2;
   float firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
-  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3 - 50;
+  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3;
   for (int i = 0; i < numOfFirstRowKeys; i++) {
     float firstRowKeyX = firstRowKeyStartX + i * minKeyWidth;
     fill(230);
