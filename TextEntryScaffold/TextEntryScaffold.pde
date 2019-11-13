@@ -64,7 +64,15 @@ void draw()
   {
     fill(128);
     textAlign(CENTER);
-    text("Finished", 280, 150);
+    float wpm = (lettersEnteredTotal/5.0f)/((finishTime - startTime)/60000f);
+    float freebieErrors = lettersExpectedTotal*.05; //no penalty if errors are under 5% of chars
+    float penalty = max(errorsTotal-freebieErrors, 0) * .5f;
+    
+    text("Raw WPM: " + wpm, width / 2, 100);
+    text("Freebie errors: " + freebieErrors, width / 2, 120);
+    text("Penalty: " + penalty, width / 2, 140);
+    text("WPM w/ penalty: " + (wpm-penalty), width / 2, 160); //yes, minus, becuase higher WPM is better
+    text("Finished", width / 2, 80);
     return;
   }
 
@@ -72,7 +80,7 @@ void draw()
   {
     fill(128);
     textAlign(CENTER);
-    text("Click to start time!", 280, 150); //display this messsage until the user clicks!
+    text("Click to start time!", width / 2, 150); //display this messsage until the user clicks!
   }
 
   if (startTime==0 & mousePressed)
@@ -85,10 +93,10 @@ void draw()
     //feel free to change the size and position of the target/entered phrases and next button 
     textAlign(LEFT); //align the text left
     fill(128);
-    text("Phrase " + (currTrialNum+1) + " of " + totalTrialNum, 70, 50); //draw the trial count
+    text("Phrase " + (currTrialNum+1) + " of " + totalTrialNum, 40, 50); //draw the trial count
     fill(128);
-    text("Target:   " + currentPhrase, 70, 100); //draw the target string
-    text("Entered:  " + currentTyped +"|", 70, 140); //draw what the user has entered thus far 
+    text("Target:   " + currentPhrase, 40, 100); //draw the target string
+    text("Entered:  " + currentTyped +"|", 40, 140); //draw what the user has entered thus far 
 
     //draw very basic next button
     fill(255, 0, 0);
@@ -219,7 +227,7 @@ void nextTrial()
     System.out.println("Penalty: " + penalty);
     System.out.println("WPM w/ penalty: " + (wpm-penalty)); //yes, minus, becuase higher WPM is better
     System.out.println("==================");
-
+    
     currTrialNum++; //increment by one so this mesage only appears once when all trials are done
     return;
   }
