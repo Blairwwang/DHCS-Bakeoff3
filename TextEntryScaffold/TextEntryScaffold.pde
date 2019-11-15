@@ -38,7 +38,7 @@ void setup()
   Collections.shuffle(Arrays.asList(phrases), new Random()); //randomize the order of the phrases with no seed
  
   orientation(LANDSCAPE); //can also be PORTRAIT - sets orientation on android device
-  size(800, 800); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
+  size(480, 845); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
   textFont(createFont("Arial", 24)); //set the font to arial 24. Creating fonts is expensive, so make difference sizes once in setup, not draw
   noStroke(); //my code doesn't use any strokes
   // Initialize it, passing a reference to the current PApplet
@@ -138,7 +138,8 @@ void draw()
 
     //draw very basic next button
     fill(255, 0, 0);
-    rect(600, 600, 200, 200); //draw next button
+    //rect(600, 600, 200, 200); //draw next button
+    rect(cx + sizeOfInputArea/2, cy + sizeOfInputArea/2, 200, 200); //draw next button
     fill(255);
     text("NEXT > ", 650, 650); //draw next label
   }
@@ -186,7 +187,8 @@ void mousePressed()
   // clicked outside, just ignore
   if (quadrant == -1) {
     //You are allowed to have a next button outside the 1" area
-    if (didMouseClick(600, 600, 200, 200)) //check if click is in next button
+    //if (didMouseClick(600, 600, 200, 200)) //check if click is in next button
+    if (didMouseClick(width / 2 + sizeOfInputArea/2,height / 2 + sizeOfInputArea/2, 200, 200))
     {
       nextTrial(); //if so, advance to next trial
     }
