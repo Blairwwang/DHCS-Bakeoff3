@@ -27,7 +27,6 @@ float rowMargin = 0;
 
 //first row
 
-
 //second row
 
 //third row
