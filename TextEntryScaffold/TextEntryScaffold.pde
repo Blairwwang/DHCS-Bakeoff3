@@ -23,7 +23,7 @@ PImage watch;
 String[] firstRowKeys = new String[] {"q", "w", "e", "r", "t", "y", "u", "i", "o", "p"};
 String[] secondRowKeys = new String[] {"a", "s", "d", "f", "g", "h", "j", "k", "l"};
 String[] thirdRowKeys = new String[] {"z", "x", "c", "v", "b", "n", "m", "<-"};
-float rowMargin = 5;
+float rowMargin = 0;
 
 //first row
 
@@ -113,6 +113,10 @@ void draw()
     fill(200);
     //text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
   }
+  
+  if (mousePressed) {
+     drawLetter(); 
+  }
 }
 
 //my terrible implementation you can entirely replace
@@ -120,9 +124,9 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 {
   return (mouseX > x && mouseX<x+w && mouseY>y && mouseY<y+h); //check to see if it is in button bounds
 }
-
+  
 //my terrible implementation you can entirely replace
-void mousePressed()
+void mouseReleased()
 {
   float spaceKeyX = width / 2 - sizeOfInputArea / 2;
   float spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight;
@@ -311,6 +315,50 @@ void drawKeyboard()
   }
   
   noStroke();
+}
+
+void drawLetter() {
+   float spaceKeyX = width / 2 - sizeOfInputArea / 2;
+  float spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight;
+  float thirdRowXOffset = (sizeOfInputArea - thirdRowKeys.length * minKeyWidth) / 2;
+  float thirdRowKeyStartX = width / 2 - sizeOfInputArea / 2 + thirdRowXOffset;
+  float thirdRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 2 - rowMargin;
+  float secondRowXOffset = (sizeOfInputArea - secondRowKeys.length * minKeyWidth) / 2;
+  float secondRowKeyStartX = width / 2 - sizeOfInputArea / 2 + secondRowXOffset;
+  float secondRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 3 - rowMargin * 2;
+  float firstRowXOffset = (sizeOfInputArea - firstRowKeys.length * minKeyWidth) / 2;
+  float firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
+  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3;
+  print(firstRowKeyY - height/2+sizeOfInputArea/2);
+  //click on first row
+  if (didMouseClick(firstRowKeyStartX, firstRowKeyY, firstRowKeys.length * minKeyWidth, keyHeight)) {
+    int keyNum = int(mouseX - firstRowKeyStartX) / minKeyWidth;
+    if (keyNum >= 0 && keyNum < firstRowKeys.length) {
+      String key = firstRowKeys[keyNum];
+      text(key, width / 2, firstRowKeyY - 20);
+    }
+  }
+  
+  else if (didMouseClick(secondRowKeyStartX, secondRowKeyY, secondRowKeys.length * minKeyWidth, keyHeight)) {
+    int keyNum = int(mouseX - secondRowKeyStartX) / minKeyWidth;
+    if (keyNum >= 0 && keyNum < secondRowKeys.length) {
+      String key = secondRowKeys[keyNum];
+      text(key, width / 2, firstRowKeyY - 20);
+    }
+  }
+  
+  else if (didMouseClick(thirdRowKeyStartX, thirdRowKeyY, thirdRowKeys.length * minKeyWidth, keyHeight)) {
+    int keyNum = int(mouseX - thirdRowKeyStartX) / minKeyWidth;
+    if (keyNum >= 0 && keyNum < thirdRowKeys.length) {
+      String key = thirdRowKeys[keyNum];
+      text(key, width / 2, firstRowKeyY - 20);
+    }
+  }
+  
+  else if (didMouseClick(spaceKeyX, spaceKeyY, sizeOfInputArea, keyHeight)) {
+    text("_", width / 2, firstRowKeyY - 20);
+  }
+ 
 }
 
 
