@@ -17,6 +17,8 @@ final int DPIofYourDeviceScreen = 240; //you will need to look up the DPI or PPI
 //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
 final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 int minKeyWidth = (int)sizeOfInputArea / 10;
+int secondRowKeyWidth = (int)sizeOfInputArea / 9;
+int thirdRowKeyWidth = (int)sizeOfInputArea / 8;
 int keyHeight = minKeyWidth * 12 / 5;
 PImage watch;
 
@@ -25,8 +27,9 @@ String[] secondRowKeys = new String[] {"a", "s", "d", "f", "g", "h", "j", "k", "
 String[] thirdRowKeys = new String[] {"z", "x", "c", "v", "b", "n", "m", "<-"};
 float rowMargin = 0;
 
-//first row
+boolean firstClick = false;
 
+//first row
 
 //second row
 
@@ -83,7 +86,7 @@ void draw()
     text("Click to start time!", width / 2, 150); //display this messsage until the user clicks!
   }
 
-  if (startTime==0 & mousePressed)
+  if (startTime==0 & firstClick)
   {
     nextTrial(); //start the trials!
   }
@@ -93,10 +96,10 @@ void draw()
     //feel free to change the size and position of the target/entered phrases and next button 
     textAlign(LEFT); //align the text left
     fill(128);
-    text("Phrase " + (currTrialNum+1) + " of " + totalTrialNum, 40, 50); //draw the trial count
+    text("Phrase " + (currTrialNum+1) + " of " + totalTrialNum, 10, 50); //draw the trial count
     fill(128);
-    text("Target:   " + currentPhrase, 40, 100); //draw the target string
-    text("Entered:  " + currentTyped +"|", 40, 140); //draw what the user has entered thus far 
+    text("Target:   " + currentPhrase, 17, 100); //draw the target string
+    text("Entered:  " + currentTyped +"|", 10, 140); //draw what the user has entered thus far 
 
     //draw very basic next button
     fill(255, 0, 0);
@@ -128,18 +131,19 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 //my terrible implementation you can entirely replace
 void mouseReleased()
 {
+  firstClick = true;
   float spaceKeyX = width / 2 - sizeOfInputArea / 2;
-  float spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight;
-  float thirdRowXOffset = (sizeOfInputArea - thirdRowKeys.length * minKeyWidth) / 2;
+  float spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight / 2;
+  float thirdRowXOffset = (sizeOfInputArea - thirdRowKeys.length * thirdRowKeyWidth) / 2;
   float thirdRowKeyStartX = width / 2 - sizeOfInputArea / 2 + thirdRowXOffset;
-  float thirdRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 2 - rowMargin;
-  float secondRowXOffset = (sizeOfInputArea - secondRowKeys.length * minKeyWidth) / 2;
+  float thirdRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 1.5 - rowMargin;
+  float secondRowXOffset = (sizeOfInputArea - secondRowKeys.length * secondRowKeyWidth) / 2;
   float secondRowKeyStartX = width / 2 - sizeOfInputArea / 2 + secondRowXOffset;
-  float secondRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 3 - rowMargin * 2;
+  float secondRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 2.5 - rowMargin * 2;
   float firstRowXOffset = (sizeOfInputArea - firstRowKeys.length * minKeyWidth) / 2;
   float firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
-  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3;
-  print(firstRowKeyY - height/2+sizeOfInputArea/2);
+  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 3.5 - rowMargin * 3;
+  //print(firstRowKeyY - height/2+sizeOfInputArea/2);
   //click on first row
   if (didMouseClick(firstRowKeyStartX, firstRowKeyY, firstRowKeys.length * minKeyWidth, keyHeight)) {
     int keyNum = int(mouseX - firstRowKeyStartX) / minKeyWidth;
@@ -148,15 +152,15 @@ void mouseReleased()
     }
   }
   
-  else if (didMouseClick(secondRowKeyStartX, secondRowKeyY, secondRowKeys.length * minKeyWidth, keyHeight)) {
-    int keyNum = int(mouseX - secondRowKeyStartX) / minKeyWidth;
+  else if (didMouseClick(secondRowKeyStartX, secondRowKeyY, secondRowKeys.length * secondRowKeyWidth, keyHeight)) {
+    int keyNum = int(mouseX - secondRowKeyStartX) / secondRowKeyWidth;
     if (keyNum >= 0 && keyNum < secondRowKeys.length) {
       currentTyped += secondRowKeys[keyNum];
     }
   }
   
-  else if (didMouseClick(thirdRowKeyStartX, thirdRowKeyY, thirdRowKeys.length * minKeyWidth, keyHeight)) {
-    int keyNum = int(mouseX - thirdRowKeyStartX) / minKeyWidth;
+  else if (didMouseClick(thirdRowKeyStartX, thirdRowKeyY, thirdRowKeys.length * thirdRowKeyWidth, keyHeight)) {
+    int keyNum = int(mouseX - thirdRowKeyStartX) / thirdRowKeyWidth;
     if (keyNum >= 0 && keyNum < thirdRowKeys.length) {
       if (keyNum != thirdRowKeys.length - 1) {
         currentTyped += thirdRowKeys[keyNum];  
@@ -167,7 +171,7 @@ void mouseReleased()
     }
   }
   
-  else if (didMouseClick(spaceKeyX, spaceKeyY, sizeOfInputArea, keyHeight)) {
+  else if (didMouseClick(spaceKeyX, spaceKeyY, sizeOfInputArea, keyHeight / 2)) {
     currentTyped += " ";
   }
   
@@ -250,6 +254,49 @@ void nextTrial()
   //currentPhrase = "abc"; // uncomment this to override the test phrase (useful for debugging)
 }
 
+void drawLetter() {
+  float spaceKeyX = width / 2 - sizeOfInputArea / 2;
+  float spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight / 2;
+  float thirdRowXOffset = (sizeOfInputArea - thirdRowKeys.length * thirdRowKeyWidth) / 2;
+  float thirdRowKeyStartX = width / 2 - sizeOfInputArea / 2 + thirdRowXOffset;
+  float thirdRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 1.5 - rowMargin;
+  float secondRowXOffset = (sizeOfInputArea - secondRowKeys.length * secondRowKeyWidth) / 2;
+  float secondRowKeyStartX = width / 2 - sizeOfInputArea / 2 + secondRowXOffset;
+  float secondRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 2.5 - rowMargin * 2;
+  float firstRowXOffset = (sizeOfInputArea - firstRowKeys.length * minKeyWidth) / 2;
+  float firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
+  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 3.5 - rowMargin * 3;
+  //print(firstRowKeyY - height/2+sizeOfInputArea/2);
+  
+  fill(255);
+  //click on first row
+  String key = "";
+  if (didMouseClick(firstRowKeyStartX, firstRowKeyY, firstRowKeys.length * minKeyWidth, keyHeight)) {
+    int keyNum = int(mouseX - firstRowKeyStartX) / minKeyWidth;
+    if (keyNum >= 0 && keyNum < firstRowKeys.length) {
+      key = firstRowKeys[keyNum];
+    }
+  }
+  
+  else if (didMouseClick(secondRowKeyStartX, secondRowKeyY, secondRowKeys.length * secondRowKeyWidth, keyHeight)) {
+    int keyNum = int(mouseX - secondRowKeyStartX) / secondRowKeyWidth;
+    if (keyNum >= 0 && keyNum < secondRowKeys.length) {
+      key = secondRowKeys[keyNum];
+    }
+  }
+  
+  else if (didMouseClick(thirdRowKeyStartX, thirdRowKeyY, thirdRowKeys.length * thirdRowKeyWidth, keyHeight)) {
+    int keyNum = int(mouseX - thirdRowKeyStartX) / thirdRowKeyWidth;
+    if (keyNum >= 0 && keyNum < thirdRowKeys.length) {
+      key = thirdRowKeys[keyNum];
+    }
+  }
+  
+  else if (didMouseClick(spaceKeyX, spaceKeyY, sizeOfInputArea, keyHeight / 2)) {
+    key = "_";
+  } 
+  text(key, width / 2, firstRowKeyY - 15);
+}
 
 void drawWatch()
 {
@@ -269,43 +316,43 @@ void drawKeyboard()
   float keyTextYOffset = 5;
   //draw space bar
   float spaceKeyX = width / 2 - sizeOfInputArea / 2;
-  float spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight;
+  float spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight / 2;
   float spaceKeyWidth = sizeOfInputArea;
-  rect(spaceKeyX, spaceKeyY, spaceKeyWidth, keyHeight);
+  rect(spaceKeyX, spaceKeyY, spaceKeyWidth, keyHeight / 2);
   fill(0);
-  text("_", spaceKeyX + spaceKeyWidth / 2, spaceKeyY + keyHeight / 2 + keyTextYOffset);
+  text("_", spaceKeyX + spaceKeyWidth / 2, spaceKeyY + keyHeight / 4 + keyTextYOffset);
   
   //draw third row of keys
   int numOfThirdRowKeys = thirdRowKeys.length;
-  float thirdRowXOffset = (sizeOfInputArea - numOfThirdRowKeys * minKeyWidth) / 2;
+  float thirdRowXOffset = (sizeOfInputArea - numOfThirdRowKeys * thirdRowKeyWidth) / 2;
   float thirdRowKeyStartX = width / 2 - sizeOfInputArea / 2 + thirdRowXOffset;
-  float thirdRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 2 - rowMargin;
+  float thirdRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 1.5 - rowMargin;
   for (int i = 0; i < numOfThirdRowKeys; i++) {
-    float thirdRowKeyX = thirdRowKeyStartX + i * minKeyWidth;
+    float thirdRowKeyX = thirdRowKeyStartX + i * thirdRowKeyWidth;
     fill(230);
-    rect(thirdRowKeyX, thirdRowKeyY, minKeyWidth, keyHeight);
+    rect(thirdRowKeyX, thirdRowKeyY, thirdRowKeyWidth, keyHeight);
     fill(0);
-    text(thirdRowKeys[i], thirdRowKeyX + minKeyWidth / 2, thirdRowKeyY + keyHeight / 2 + keyTextYOffset);
+    text(thirdRowKeys[i], thirdRowKeyX + thirdRowKeyWidth / 2, thirdRowKeyY + keyHeight / 2 + keyTextYOffset);
   }
   
   //draw second row of keys
   int numOfSecondRowKeys = secondRowKeys.length;
-  float secondRowXOffset = (sizeOfInputArea - numOfSecondRowKeys * minKeyWidth) / 2;
+  float secondRowXOffset = (sizeOfInputArea - numOfSecondRowKeys * secondRowKeyWidth) / 2;
   float secondRowKeyStartX = width / 2 - sizeOfInputArea / 2 + secondRowXOffset;
-  float secondRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 3 - rowMargin * 2;
+  float secondRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 2.5 - rowMargin * 2;
   for (int i = 0; i < numOfSecondRowKeys; i++) {
-    float secondRowKeyX = secondRowKeyStartX + i * minKeyWidth;
+    float secondRowKeyX = secondRowKeyStartX + i * secondRowKeyWidth;
     fill(230);
-    rect(secondRowKeyX, secondRowKeyY, minKeyWidth, keyHeight);
+    rect(secondRowKeyX, secondRowKeyY, secondRowKeyWidth, keyHeight);
     fill(0);
-    text(secondRowKeys[i], secondRowKeyX + minKeyWidth / 2, secondRowKeyY + keyHeight / 2 + keyTextYOffset);
+    text(secondRowKeys[i], secondRowKeyX + secondRowKeyWidth / 2, secondRowKeyY + keyHeight / 2 + keyTextYOffset);
   }
   
   //draw first row of keys
   int numOfFirstRowKeys = firstRowKeys.length;
   float firstRowXOffset = (sizeOfInputArea - numOfFirstRowKeys * minKeyWidth) / 2;
   float firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
-  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3;
+  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 3.5 - rowMargin * 3;
   for (int i = 0; i < numOfFirstRowKeys; i++) {
     float firstRowKeyX = firstRowKeyStartX + i * minKeyWidth;
     fill(230);
@@ -314,53 +361,12 @@ void drawKeyboard()
     text(firstRowKeys[i], firstRowKeyX + minKeyWidth / 2, firstRowKeyY + keyHeight / 2 + keyTextYOffset);
   }
   
+  //draw top display area
+  fill(80);
+  rect(width / 2 - sizeOfInputArea / 2, height / 2 - sizeOfInputArea / 2, sizeOfInputArea, firstRowKeyY - (height / 2 - sizeOfInputArea / 2));
+  
   noStroke();
 }
-
-void drawLetter() {
-   float spaceKeyX = width / 2 - sizeOfInputArea / 2;
-  float spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight;
-  float thirdRowXOffset = (sizeOfInputArea - thirdRowKeys.length * minKeyWidth) / 2;
-  float thirdRowKeyStartX = width / 2 - sizeOfInputArea / 2 + thirdRowXOffset;
-  float thirdRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 2 - rowMargin;
-  float secondRowXOffset = (sizeOfInputArea - secondRowKeys.length * minKeyWidth) / 2;
-  float secondRowKeyStartX = width / 2 - sizeOfInputArea / 2 + secondRowXOffset;
-  float secondRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 3 - rowMargin * 2;
-  float firstRowXOffset = (sizeOfInputArea - firstRowKeys.length * minKeyWidth) / 2;
-  float firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
-  float firstRowKeyY = height / 2 + sizeOfInputArea / 2  - keyHeight * 4 - rowMargin * 3;
-  print(firstRowKeyY - height/2+sizeOfInputArea/2);
-  //click on first row
-  if (didMouseClick(firstRowKeyStartX, firstRowKeyY, firstRowKeys.length * minKeyWidth, keyHeight)) {
-    int keyNum = int(mouseX - firstRowKeyStartX) / minKeyWidth;
-    if (keyNum >= 0 && keyNum < firstRowKeys.length) {
-      String key = firstRowKeys[keyNum];
-      text(key, width / 2, firstRowKeyY - 20);
-    }
-  }
-  
-  else if (didMouseClick(secondRowKeyStartX, secondRowKeyY, secondRowKeys.length * minKeyWidth, keyHeight)) {
-    int keyNum = int(mouseX - secondRowKeyStartX) / minKeyWidth;
-    if (keyNum >= 0 && keyNum < secondRowKeys.length) {
-      String key = secondRowKeys[keyNum];
-      text(key, width / 2, firstRowKeyY - 20);
-    }
-  }
-  
-  else if (didMouseClick(thirdRowKeyStartX, thirdRowKeyY, thirdRowKeys.length * minKeyWidth, keyHeight)) {
-    int keyNum = int(mouseX - thirdRowKeyStartX) / minKeyWidth;
-    if (keyNum >= 0 && keyNum < thirdRowKeys.length) {
-      String key = thirdRowKeys[keyNum];
-      text(key, width / 2, firstRowKeyY - 20);
-    }
-  }
-  
-  else if (didMouseClick(spaceKeyX, spaceKeyY, sizeOfInputArea, keyHeight)) {
-    text("_", width / 2, firstRowKeyY - 20);
-  }
- 
-}
-
 
 
 
