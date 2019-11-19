@@ -146,11 +146,13 @@ void draw()
     //text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
   }
   
-  resetLetters();
+  //resetLetters();
   if (mousePressed) {
+    String key = "";
+    key = keyForClickPos();
     textFont(Arial);
-    drawLetter(); 
-    expandLetter();
+    drawLetter(key); 
+    expandLetter(key);
   }
 }
 
@@ -248,10 +250,8 @@ void nextTrial()
   //currentPhrase = "abc"; // uncomment this to override the test phrase (useful for debugging)
 }
 
-void drawLetter() {
+void drawLetter(String key) {
   fill(255);
-  String key = "";
-  key = keyForClickPos();
   if (!key.equals("")) {
     text(key, width / 2, firstRowKeyY - 15);
   }
@@ -268,9 +268,7 @@ int contains(String[] row, String key)
   return -1;
 }
 
-void expandLetter() {
-  String key = "";
-  key = keyForClickPos();
+void expandLetter(String key) {
   int ind;
   stroke(0);
   fill(255);
@@ -359,7 +357,7 @@ String keyForClickPos() {
   }
   
   //"p" edge area
-  if (didMouseClick(firstRowKeyStartX + firstRowKeys.length * firstRowKeyWidth, firstRowKeyY + 1, firstRowXOffset, keyHeight)) {
+  else if (didMouseClick(firstRowKeyStartX + firstRowKeys.length * firstRowKeyWidth, firstRowKeyY + 1, firstRowXOffset, keyHeight)) {
     key = firstRowKeys[firstRowKeys.length - 1];
   }
   
@@ -374,12 +372,12 @@ String keyForClickPos() {
   //second row "a" and "l" edge area
   
   //"a" edge area
-  if (didMouseClick(startX, secondRowKeyY, secondRowXOffset + 1, keyHeight)) {
+  else if (didMouseClick(startX, secondRowKeyY, secondRowXOffset + 1, keyHeight)) {
     key = secondRowKeys[0];
   }
   
   //"l" edge area
-  if (didMouseClick(secondRowKeyStartX + secondRowKeys.length * secondRowKeyWidth, secondRowKeyY, secondRowXOffset + 1, keyHeight)) {
+  else if (didMouseClick(secondRowKeyStartX + secondRowKeys.length * secondRowKeyWidth - 1, secondRowKeyY, secondRowXOffset, keyHeight)) {
     key = secondRowKeys[secondRowKeys.length - 1];
   }
   
@@ -394,12 +392,12 @@ String keyForClickPos() {
   //third row "z" and "<-" edge area
   
   //"z" edge area
-  if (didMouseClick(startX, thirdRowKeyY, thirdRowXOffset + 1, keyHeight)) {
+  else if (didMouseClick(startX, thirdRowKeyY, thirdRowXOffset + 1, keyHeight)) {
     key = thirdRowKeys[0];
   }
   
   //"l" edge area
-  if (didMouseClick(thirdRowKeyStartX + thirdRowKeys.length * thirdRowKeyWidth, thirdRowKeyY, thirdRowXOffset + 1, keyHeight)) {
+  else if (didMouseClick(thirdRowKeyStartX + thirdRowKeys.length * thirdRowKeyWidth, thirdRowKeyY, thirdRowXOffset + 1, keyHeight)) {
     key = thirdRowKeys[thirdRowKeys.length - 1];
   }
   
