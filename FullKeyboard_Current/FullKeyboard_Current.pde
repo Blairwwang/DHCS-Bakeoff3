@@ -146,9 +146,11 @@ void draw()
     //text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
   }
   
+  resetLetters();
   if (mousePressed) {
     textFont(Arial);
     drawLetter(); 
+    expandLetter();
   }
 }
 
@@ -254,6 +256,62 @@ void drawLetter() {
     text(key, width / 2, firstRowKeyY - 15);
   }
   
+}
+
+int contains(String[] row, String key)
+{
+  for (int i = 0; i < row.length; i++) {
+    if (key.equals(row[i])){
+       return i; 
+    }
+  }
+  return -1;
+}
+
+void expandLetter() {
+  String key = "";
+  key = keyForClickPos();
+  int ind;
+  stroke(0);
+  fill(255);
+  if (key.equals("_")) {
+    //draw space bar
+    rect(spaceKeyX, spaceKeyY - 10, spaceKeyWidth, keyHeight / 2 + 10);
+    fill(0);
+    text("_", spaceKeyX + spaceKeyWidth / 2, spaceKeyY + keyHeight / 4 + keyTextYOffset);
+  }
+  
+  if ((ind = contains(firstRowKeys, key)) > -1){
+    drawExpandedKey(firstRowKeys, firstRowKeyWidth, firstRowKeyY, ind);
+  }
+  else if ((ind = contains(secondRowKeys, key)) > -1){
+    drawExpandedKey(secondRowKeys, secondRowKeyWidth, secondRowKeyY, ind);
+  }
+  else if ((ind = contains(thirdRowKeys, key)) > -1) {
+    drawExpandedKey(thirdRowKeys, thirdRowKeyWidth, thirdRowKeyY, ind);
+  }
+}
+
+void resetLetters() {
+  firstRowKeyWidth = (int)sizeOfInputArea / 10;
+  secondRowKeyWidth = (int)sizeOfInputArea / 9;
+  thirdRowKeyWidth = (int)sizeOfInputArea / 8;
+  keyHeight = firstRowKeyWidth * 12 / 5;
+  
+  spaceKeyX = width / 2 - sizeOfInputArea / 2;
+  spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight / 2;
+  spaceKeyHeight = keyHeight / 2;
+  spaceKeyWidth = sizeOfInputArea;
+  thirdRowXOffset = (sizeOfInputArea - thirdRowKeys.length * thirdRowKeyWidth) / 2;
+  thirdRowKeyStartX = width / 2 - sizeOfInputArea / 2 + thirdRowXOffset;
+  thirdRowKeyY = height / 2 + sizeOfInputArea / 2  - (keyHeight + rowMargin) * 1 - spaceKeyHeight;
+  secondRowXOffset = (sizeOfInputArea - secondRowKeys.length * secondRowKeyWidth) / 2;
+  secondRowKeyStartX = width / 2 - sizeOfInputArea / 2 + secondRowXOffset;
+  secondRowKeyY = height / 2 + sizeOfInputArea / 2  - (keyHeight + rowMargin) * 2 - spaceKeyHeight;
+  firstRowXOffset = (sizeOfInputArea - firstRowKeys.length * firstRowKeyWidth) / 2;
+  firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
+  firstRowKeyY = height / 2 + sizeOfInputArea / 2  - (keyHeight + rowMargin) * 3 - spaceKeyHeight;
+  keyTextYOffset = 5; 
 }
 
 void drawWatch()
@@ -388,6 +446,35 @@ void drawKeysForRow(String[] keys, float keyWidth, float rowKeyY) {
     }
     
   }
+}
+
+void drawExpandedKey(String[] keys, float keyWidth, float rowKeyY, int i)
+{
+  int numOfKeys = keys.length;
+  float rowXOffset = (sizeOfInputArea - numOfKeys * keyWidth) / 2;
+  float rowKeyStartX = width / 2 - sizeOfInputArea / 2 + rowXOffset;
+  if (i == 0) {
+    float rowKeyX = width / 2 - sizeOfInputArea / 2;
+    fill(255);
+    rect(rowKeyX, rowKeyY - 5, keyWidth + rowXOffset + 10, keyHeight + 10);
+    fill(0);
+    text(keys[i], rowKeyX + (keyWidth + rowXOffset) / 2, rowKeyY + keyHeight / 2 + keyTextYOffset);
+  }
+  else if (i == numOfKeys - 1) {
+    float rowKeyX = rowKeyStartX + i * keyWidth;
+    fill(255);
+    rect(rowKeyX - 10, rowKeyY - 5, keyWidth + rowXOffset + 10, keyHeight + 10);
+    fill(0);
+    text(keys[i], rowKeyX + (keyWidth + rowXOffset) / 2, rowKeyY + keyHeight / 2 + keyTextYOffset);
+  }
+  else {
+    float rowKeyX = rowKeyStartX + i * keyWidth;
+    fill(255);
+    rect(rowKeyX - 5, rowKeyY - 5, keyWidth + 10, keyHeight + 10);
+    fill(0);
+    text(keys[i], rowKeyX + keyWidth / 2, rowKeyY + keyHeight / 2 + keyTextYOffset);
+  }
+    
 }
 
 
