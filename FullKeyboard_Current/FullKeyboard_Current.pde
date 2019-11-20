@@ -13,7 +13,7 @@ float lettersExpectedTotal = 0; //a running total of the number of letters expec
 float errorsTotal = 0; //a running total of the number of errors (when hitting next)
 String currentPhrase = ""; //the current target phrase
 String currentTyped = ""; //what the user has typed so far
-final int DPIofYourDeviceScreen = 240; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
+final int DPIofYourDeviceScreen = 277; //you will need to look up the DPI or PPI of your device to make sure you get the right scale!!
 //http://en.wikipedia.org/wiki/List_of_displays_by_pixel_density
 final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 int firstRowKeyWidth;
@@ -53,7 +53,7 @@ void setup()
   //Collections.shuffle(Arrays.asList(phrases), new Random(100)); //randomize the order of the phrases with seed 100; same order every time, useful for testing
  
   orientation(PORTRAIT); //can also be PORTRAIT - sets orientation on android device
-  size(480, 854); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
+  size(720, 1280); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
   Arial = createFont("Arial", 20, false);
   Menlo = createFont("Menlo", 15, false);
   textFont(Menlo); //set the font to arial 24. Creating fonts is expensive, so make difference sizes once in setup, not draw
@@ -89,6 +89,14 @@ void draw()
   rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea); //input area should be 1" by 1"
   textFont(Arial);
   drawKeyboard();
+  
+  if (mousePressed) {
+    String key = "";
+    key = keyForClickPos();
+    textFont(Arial);
+    drawLetter(key); 
+    expandLetter(key);
+  }
   
   if (finishTime!=0)
   {
@@ -146,7 +154,6 @@ void draw()
     //text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
   }
   
-  //resetLetters();
   if (mousePressed) {
     String key = "";
     key = keyForClickPos();
