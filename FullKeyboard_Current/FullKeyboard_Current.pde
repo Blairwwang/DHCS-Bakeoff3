@@ -132,10 +132,10 @@ void draw()
 
     //draw very basic next button
     fill(255, 0, 0);
-    rect(width/2 - 100, height/2 + 150, 200, 200); //draw next button
+    rect(0, height - 200, 200, 200); //draw next button
     fill(255);
     textAlign(CENTER);
-    text("NEXT > ", width/2, height/2 + 250); //draw next label
+    text("NEXT > ", 100, height - 100); //draw next label
     //my draw code
     //fill(255, 0, 0); //red button
     //rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
@@ -182,7 +182,7 @@ void mouseReleased()
   }
   
   //You are allowed to have a next button outside the 1" area
-  if (didMouseClick(width/2 - 100, height/2 + 150, 200, 200)) //check if click is in next button
+  if (didMouseClick(0, height - 200, 200, 200)) //check if click is in next button
   {
     nextTrial(); //if so, advance to next trial
   }
