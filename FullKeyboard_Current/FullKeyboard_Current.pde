@@ -55,18 +55,18 @@ void setup()
   orientation(PORTRAIT); //can also be PORTRAIT - sets orientation on android device
   size(720, 1280); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
   Arial = createFont("Arial", 20, false);
-  Menlo = createFont("Menlo", 15, false);
+  Menlo = createFont("ibm.ttf", 18, false);
   textFont(Menlo); //set the font to arial 24. Creating fonts is expensive, so make difference sizes once in setup, not draw
   noStroke(); //my code doesn't use any strokes
   
   firstRowKeyWidth = (int)sizeOfInputArea / 10;
   secondRowKeyWidth = (int)sizeOfInputArea / 9;
   thirdRowKeyWidth = (int)sizeOfInputArea / 8;
-  keyHeight = firstRowKeyWidth * 12 / 5;
+  keyHeight = firstRowKeyWidth * 12 / 5 - 3;
   
   spaceKeyX = width / 2 - sizeOfInputArea / 2;
-  spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight / 2;
-  spaceKeyHeight = keyHeight / 2;
+  spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight / 2 - 10.5;
+  spaceKeyHeight = keyHeight / 2 + 10.5;
   spaceKeyWidth = sizeOfInputArea;
   thirdRowXOffset = (sizeOfInputArea - thirdRowKeys.length * thirdRowKeyWidth) / 2;
   thirdRowKeyStartX = width / 2 - sizeOfInputArea / 2 + thirdRowXOffset;
@@ -85,18 +85,10 @@ void draw()
 {
   background(255); //clear background
   drawWatch(); //draw watch background
-  fill(100);
+  fill(0);
   rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea); //input area should be 1" by 1"
   textFont(Arial);
   drawKeyboard();
-  
-  if (mousePressed) {
-    String key = "";
-    key = keyForClickPos();
-    textFont(Arial);
-    drawLetter(key); 
-    expandLetter(key);
-  }
   
   if (finishTime!=0)
   {
@@ -140,10 +132,10 @@ void draw()
 
     //draw very basic next button
     fill(255, 0, 0);
-    rect(width/2 - 100, height/2 + 150, 200, 200); //draw next button
+    rect(width - 200, height - 200, 200, 200); //draw next button
     fill(255);
     textAlign(CENTER);
-    text("NEXT > ", width/2, height/2 + 250); //draw next label
+    text("NEXT > ", width - 100, height - 100); //draw next label
     //my draw code
     //fill(255, 0, 0); //red button
     //rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2); //draw left red button
@@ -154,6 +146,7 @@ void draw()
     //text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
   }
   
+  //resetLetters();
   if (mousePressed) {
     String key = "";
     key = keyForClickPos();
@@ -189,7 +182,7 @@ void mouseReleased()
   }
   
   //You are allowed to have a next button outside the 1" area
-  if (didMouseClick(width/2 - 100, height/2 + 150, 200, 200)) //check if click is in next button
+  if (didMouseClick(width-200, height - 200, 200, 200)) //check if click is in next button
   {
     nextTrial(); //if so, advance to next trial
   }
@@ -281,7 +274,7 @@ void expandLetter(String key) {
   fill(255);
   if (key.equals("_")) {
     //draw space bar
-    rect(spaceKeyX, spaceKeyY - 10, spaceKeyWidth, keyHeight / 2 + 10);
+    rect(spaceKeyX, spaceKeyY - 10, spaceKeyWidth, spaceKeyHeight + 10);
     fill(0);
     text("_", spaceKeyX + spaceKeyWidth / 2, spaceKeyY + keyHeight / 4 + keyTextYOffset);
   }
@@ -295,28 +288,6 @@ void expandLetter(String key) {
   else if ((ind = contains(thirdRowKeys, key)) > -1) {
     drawExpandedKey(thirdRowKeys, thirdRowKeyWidth, thirdRowKeyY, ind);
   }
-}
-
-void resetLetters() {
-  firstRowKeyWidth = (int)sizeOfInputArea / 10;
-  secondRowKeyWidth = (int)sizeOfInputArea / 9;
-  thirdRowKeyWidth = (int)sizeOfInputArea / 8;
-  keyHeight = firstRowKeyWidth * 12 / 5;
-  
-  spaceKeyX = width / 2 - sizeOfInputArea / 2;
-  spaceKeyY = height / 2 + sizeOfInputArea / 2 - keyHeight / 2;
-  spaceKeyHeight = keyHeight / 2;
-  spaceKeyWidth = sizeOfInputArea;
-  thirdRowXOffset = (sizeOfInputArea - thirdRowKeys.length * thirdRowKeyWidth) / 2;
-  thirdRowKeyStartX = width / 2 - sizeOfInputArea / 2 + thirdRowXOffset;
-  thirdRowKeyY = height / 2 + sizeOfInputArea / 2  - (keyHeight + rowMargin) * 1 - spaceKeyHeight;
-  secondRowXOffset = (sizeOfInputArea - secondRowKeys.length * secondRowKeyWidth) / 2;
-  secondRowKeyStartX = width / 2 - sizeOfInputArea / 2 + secondRowXOffset;
-  secondRowKeyY = height / 2 + sizeOfInputArea / 2  - (keyHeight + rowMargin) * 2 - spaceKeyHeight;
-  firstRowXOffset = (sizeOfInputArea - firstRowKeys.length * firstRowKeyWidth) / 2;
-  firstRowKeyStartX = width / 2 - sizeOfInputArea / 2 + firstRowXOffset;
-  firstRowKeyY = height / 2 + sizeOfInputArea / 2  - (keyHeight + rowMargin) * 3 - spaceKeyHeight;
-  keyTextYOffset = 5; 
 }
 
 void drawWatch()
@@ -335,7 +306,7 @@ void drawKeyboard()
   stroke(0);
   fill(230);
   //draw space bar
-  rect(spaceKeyX, spaceKeyY, spaceKeyWidth, keyHeight / 2);
+  rect(spaceKeyX, spaceKeyY, spaceKeyWidth, spaceKeyHeight);
   fill(0);
   text("_", spaceKeyX + spaceKeyWidth / 2, spaceKeyY + keyHeight / 4 + keyTextYOffset);
   
@@ -416,7 +387,7 @@ String keyForClickPos() {
     }
   }
   
-  else if (didMouseClick(spaceKeyX, spaceKeyY, sizeOfInputArea, keyHeight / 2)) {
+  else if (didMouseClick(spaceKeyX, spaceKeyY, sizeOfInputArea, spaceKeyHeight)) {
     key = "_";
   } 
   
